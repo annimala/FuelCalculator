@@ -2,6 +2,7 @@ package com.example.fuelcalculator;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.NodeOrientation;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 
@@ -22,59 +23,65 @@ public class FuelController implements Initializable {
     @FXML private TextField txtConsumption;
     @FXML private TextField txtPrice;
 
-    private ResourceBundle bundle;
+    private LocalizationService localizationService = new LocalizationService();
+    private CalculationService calculationService = new CalculationService();
+    private String currentLang = "EN";
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        setLanguage(new Locale("en", "US"));
+        setLanguage("EN");
     }
 
     @FXML
     private void handleEN() {
-        setLanguage(new Locale("en", "US"));
+        setLanguage("EN");
     }
 
     @FXML
     private void handleFR() {
-        setLanguage(new Locale("fr", "FR"));
+        setLanguage("FR");
     }
 
     @FXML
     private void handleJP() {
-        setLanguage(new Locale("ja", "JP"));
+        setLanguage("JP");
     }
 
     @FXML
     private void handleIR() {
-        setLanguage(new Locale("fa", "IR"));
+        setLanguage("IR");
     }
 
+    @FXML
+    private javafx.scene.layout.VBox root;
 
-    private void setLanguage(Locale locale) {
-        try {
-            bundle = ResourceBundle.getBundle(
-                    "com.example.fuelcalculator.messages", locale
-            );
-            lblDistance.setText(bundle.getString("distance.label"));
-            lblConsumption.setText(bundle.getString("consumption.label"));
-            lblPrice.setText(bundle.getString("price.label"));
-            lblResult.setText("");
-        } catch (MissingResourceException e) {
-            lblResult.setText("Error: Language resource file not found.");
+
+    private void setLanguage(String lang) {
+        currentLang = lang;
+        localizationService.loadStrings(lang);
+        lblDistance.setText(localizationService.getString("distance.label"));
+        lblConsumption.setText(localizationService.getString("consumption.label"));
+        lblPrice.setText(localizationService.getString("price.label"));
+        lblResult.setText("");
+
+        if (lang.equals("IR")) {
+            root.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+        } else {
+            root.setNodeOrientation(NodeOrientation.LEFT_TO_RIGHT);
         }
     }
 
     @FXML
     private void handleCalculate() {
         try {
-            double distance    = Double.parseDouble(txtDistance.getText().trim());
+            double distance = Double.parseDouble(txtDistance.getText().trim());
             double consumption = Double.parseDouble(txtConsumption.getText().trim());
-            double price       = Double.parseDouble(txtPrice.getText().trim());
+            double price = Double.parseDouble(txtPrice.getText().trim());
 
             double totalFuel = (consumption / 100.0) * distance;
             double totalCost = totalFuel * price;
 
-            String resultTemplate = bundle.getString("result.label");
+            String resultTemplate = localizationService.getString("result.label");
             String result = MessageFormat.format(
                     resultTemplate,
                     String.format("%.2f", totalFuel),
@@ -82,8 +89,15 @@ public class FuelController implements Initializable {
             );
             lblResult.setText(result);
 
+            CalculationRecord record = new CalculationRecord(distance, consumption, price, totalFuel, totalCost, currentLang);
+            calculationService.saveCalculation(record);
+
         } catch (NumberFormatException e) {
-            lblResult.setText(bundle.getString("invalid.input"));
+            lblResult.setText(localizationService.getString("invalid.input"));
+        }
+        catch (Exception e) {
+            //lblResult.setText(bundle.getString("invalid.input"));
+            lblResult.setText("Error: " + e.getMessage());
         }
     }
 }
