@@ -26,17 +26,23 @@ OR manually copy and paste sections (create user, create database, create tables
 ## Verify the setup
 
 SELECT * FROM localization_strings;
+
 SELECT * FROM calculation_records;
 
 ## Database configuration
 
 To update database creditentials in DatabaseConnection.java
 Example:
+
 private static final String URL = "jdbc:mariadb://localhost:3306/fuel_calculator_localization";
+
 private static final String USER = "example_name";
+
 private static final String PASSWORD = "example_password";
+
 
 ## Run application
 
 Run using maven:
+
 mvn clean javafx:run
