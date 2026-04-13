@@ -23,8 +23,8 @@ public class FuelController implements Initializable {
     @FXML private TextField txtConsumption;
     @FXML private TextField txtPrice;
 
-    private LocalizationService localizationService = new LocalizationService();
-    private CalculationService calculationService = new CalculationService();
+    private final LocalizationService localizationService = new LocalizationService();
+    private final CalculationService calculationService = new CalculationService();
     private String currentLang = "EN";
 
     @Override

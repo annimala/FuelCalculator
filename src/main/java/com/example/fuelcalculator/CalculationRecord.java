@@ -1,12 +1,12 @@
 package com.example.fuelcalculator;
 
 public class CalculationRecord {
-    private double distance;
-    private double consumption;
-    private double price;
-    private double totalFuel;
-    private double totalCost;
-    private String language;
+    private final double distance;
+    private final double consumption;
+    private final double price;
+    private final double totalFuel;
+    private final double totalCost;
+    private final String language;
 
     public CalculationRecord(double distance, double consumption, double price,
                              double totalFuel, double totalCost, String language) {

@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class LocalizationService {
 
-    private Map<String, String> strings = new HashMap<>();
+    private final Map<String, String> strings = new HashMap<>();
 
     public void loadStrings(String language) {
         String sql =  "SELECT `key`, value FROM localization_strings WHERE language = ?";
