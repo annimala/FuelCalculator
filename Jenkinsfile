@@ -32,11 +32,13 @@ pipeline {
                     bat """
                                 ${tool 'SonarScanner'}\\bin\\sonar-scanner ^
                                 -Dsonar.projectKey=myproject ^
-                                -Dsonar.sources=src ^
+                                -Dsonar.sources=src/main/java ^
                                 -Dsonar.projectName=FuelCalculator ^
                                 -Dsonar.host.url=http://localhost:9000 ^
                                 -Dsonar.login=${env.SONAR_TOKEN} ^
                                 -Dsonar.java.binaries=target/classes
+                                -Dsonar.java.test.binaries=target/test-classes ^
+                                -Dsonar.java.libraries=target/dependency/*.jar ^
                                 -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
                             """
                 }
