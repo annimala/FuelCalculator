@@ -16,7 +16,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/annimala/ShoppingCart.git'
+                git 'https://github.com/annimala/FuelCalculator.git'
             }
         }
 
