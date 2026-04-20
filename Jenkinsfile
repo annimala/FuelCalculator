@@ -38,7 +38,6 @@ pipeline {
                                 -Dsonar.login=${env.SONAR_TOKEN} ^
                                 -Dsonar.java.binaries=target/classes ^
                                 -Dsonar.java.test.binaries=target/test-classes ^
-                                -Dsonar.java.libraries=target/dependency/*.jar ^
                                 -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
                                 -Dsonar.coverage.exclusions=**/FuelController.java,**/Main.java
                             """
