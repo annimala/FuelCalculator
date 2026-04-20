@@ -9,7 +9,8 @@ pipeline {
           PATH = "C:\\Program Files\\Docker\\Docker\\resources\\bin;${env.PATH}"
           DOCKERHUB_CREDENTIALS_ID = 'Docker_Hub'
           DOCKERHUB_REPO = 'annialanen/fuel_calc'
-          DOCKER_IMAGE_TAG = 'v1'
+          DOCKER_IMAGE_TAG = 'latest'
+          SONARQUBE_SERVER = 'SonarQubeServer'
       }
 
     stages {
@@ -22,6 +23,22 @@ pipeline {
         stage('Build & test') {
             steps {
                 bat 'mvn clean install'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv('SonarQubeServer') {
+                    bat """
+                                ${tool 'SonarScanner'}\\bin\\sonar-scanner ^
+                                -Dsonar.projectKey=myproject ^
+                                -Dsonar.sources=src ^
+                                -Dsonar.projectName=FuelCalculator ^
+                                -Dsonar.host.url=http://localhost:9000 ^
+                                -Dsonar.login=${env.SONAR_TOKEN} ^
+                                -Dsonar.java.binaries=target/classes
+                            """
+                }
             }
         }
 
@@ -43,6 +60,5 @@ pipeline {
                       }
                   }
               }
-
-    }
+         }
 }
